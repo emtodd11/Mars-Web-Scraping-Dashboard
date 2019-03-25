@@ -9,7 +9,7 @@ import datetime as dt
 
 def mars_news(browser):
 
-    url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
+    url = 'https://mars.nasa.gov/news/'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -50,7 +50,7 @@ def mars_facts(browser):
     try:
         url = 'https://space-facts.com/mars/'
         df = pd.read_html(url)[0]
-        f.columns=['description', 'value']
+        df.columns=['description', 'value']
         df.set_index('description', inplace=True)
     except BaseException:
         return None
@@ -103,22 +103,6 @@ def mars_hemispheres(browser):
     browser.click_link_by_partial_text('Back')
 
     return hemisphere_image_urls
-
-
-def scrape_hemisphere(html_text):
-    hemisphere_soup = BeautifulSoup(html_text, 'html.parser')
-
-    try:
-        title_element = hemisphere_soup.find('h2', class_="title").get_text()
-        sample_element = hemisphere_soup.find('a', text="Sample").get('href')
-    except AttributeError:
-        title_element = None
-        sample_element = None
-    hemisphere = {
-        "title": title_element,
-        "img_url": sample_element
-    }
-    return hemisphere
 
 
 def scrape_all():
